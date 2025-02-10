@@ -3,8 +3,10 @@ package com.otavio.agendamento_notificacao_api.business;
 import com.otavio.agendamento_notificacao_api.business.mapper.IAgendamentoMapper;
 import com.otavio.agendamento_notificacao_api.controller.dto.in.AgendamentoRecord;
 import com.otavio.agendamento_notificacao_api.controller.dto.out.AgendamentoRecordOut;
+import com.otavio.agendamento_notificacao_api.infrastructure.exception.NotFoundException;
 import com.otavio.agendamento_notificacao_api.infrastructure.repositories.AgendamentoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -19,5 +21,11 @@ public class AgendamentoService {
         return agendamentoMapper.paraOut(
             repository.save(agendamentoMapper.paraEntity(agendamentoRecord))
         );
+    }
+
+    public AgendamentoRecordOut buscarAgendamentoPorId(Long id){
+        return agendamentoMapper.paraOut(
+                repository.findById(id).orElseThrow(() -> new NotFoundException("Id não encontrado"))
+                );
     }
 }
